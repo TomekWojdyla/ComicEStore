@@ -17,7 +17,7 @@ public class PublisherController : ControllerBase
         _context = context;
     }
 
-    // POST api/<ComicBookItemController>
+    // POST api/<PublisherController>
     [HttpPost]
     public async Task<IActionResult> CreatePublisher([FromBody] Publisher publisher)
     {
@@ -33,7 +33,7 @@ public class PublisherController : ControllerBase
     }
 
 
-    //GET api/<ComicBookItemController>
+    //GET api/<PublisherController>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPublisherById(int id)
     {
@@ -45,4 +45,6 @@ public class PublisherController : ControllerBase
         return Ok(publisher);
     }
 
+    //DELETE api/<PublisherController>
+    [HttpDelete("{id}")]
 }
