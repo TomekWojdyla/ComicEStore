@@ -47,4 +47,15 @@ public class PublisherController : ControllerBase
 
     //DELETE api/<PublisherController>
     [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePublisher(int id)
+    {
+        var publisher = await _context.Publishers.FindAsync(id);
+        if (publisher == null)
+        {
+            return NotFound();
+        }
+        _context.Publishers.Remove(publisher);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 }
