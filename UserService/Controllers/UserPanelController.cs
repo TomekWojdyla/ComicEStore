@@ -36,7 +36,7 @@ public class UserPanelController : ControllerBase
 
     }
 
-    // PUT api/<UserController>/5
+    // PATCH api/<UserController>/5
     [HttpPatch("change-password")]
     [Authorize(Policy = "RegisteredOnly")]
     public async Task<IActionResult> ChangePassword([FromBody] UserChangePasswordDto dto)
@@ -62,4 +62,32 @@ public class UserPanelController : ControllerBase
         }
 
     }
+
+    // PUT api/<UserController>/5
+    [HttpPut("edit-account")]
+    [Authorize(Policy = "RegisteredOnly")]
+    public async Task<IActionResult> EditAccount([FromBody] UserEditDto dto)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = int.Parse(userIdClaim.Value);
+
+        try
+        {
+            var result = await _userService.EditUserAccountAsync(userId, dto);
+
+            if (result)
+                return Ok(new { message = "Konto zmodyfikowane pomyślnie." });
+
+            return BadRequest(new { message = "Nie udało się wyedytować konta. Skontaktuj się z administratorem." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Wystąpił błąd serwera.", error = ex.Message });
+        }
+
+    }
+
 }

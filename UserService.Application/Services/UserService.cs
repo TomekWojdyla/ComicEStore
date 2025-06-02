@@ -142,4 +142,60 @@ public class UserService : IUserService
             return true;
         }
     }
+
+    public async Task<bool> EditUserAccountAsync(int userId, UserEditDto editAccountDto)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            throw new InvalidOperationException("User does not exist.");
+        }
+        else
+        {
+            user.Username = editAccountDto.NewUsername;
+            user.Email = editAccountDto.NewEmail;
+            await _userRepository.UpdateUserAsync(user);
+
+            return true;
+        }
+    }
+
+    public async Task<bool> AdminEditUserAccountAsync(int userId, UserUpdateDto userUpdateDto)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            throw new InvalidOperationException("User does not exist.");
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(userUpdateDto.NewUsername))
+            {
+                user.Username = userUpdateDto.NewUsername;
+            }
+            if (!string.IsNullOrEmpty(userUpdateDto.NewEmail))
+            {
+                user.Email = userUpdateDto.NewEmail;
+            }
+            if (!string.IsNullOrEmpty(userUpdateDto.NewPassword) && userUpdateDto.NewPassword.Length >= 5)
+            {
+                user.Password = userUpdateDto.NewPassword;
+            }
+            else
+            {
+                throw new InvalidOperationException("New password must be at least 5 characters long.");
+            }
+            if (userUpdateDto.NewIsActive != null)
+            {
+                user.IsActive = userUpdateDto.NewIsActive;
+            }
+            
+            //var newRoles = new List<Role> { };
+            //user.Roles = newRoles;
+
+            await _userRepository.UpdateUserAsync(user);
+
+            return true;
+        }
+    }
 }

@@ -17,4 +17,6 @@ public interface IUserService
     Task<UserReadDto> AddUserAsync(UserRegisterDto userRegisterDto);
     Task<bool> ChangePasswordAsync(int userId, UserChangePasswordDto changePasswordDto);
     Task<List<AdminReadDto>> GetAllUsersAsync();
+    Task<bool> EditUserAccountAsync(int userId, UserEditDto userEditDto);
+    Task<bool> AdminEditUserAccountAsync(int userId, UserUpdateDto userUpdateDto);
 }
